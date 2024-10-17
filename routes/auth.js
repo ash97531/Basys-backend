@@ -4,6 +4,46 @@ const bcrypt = require('bcrypt');
 const User = require('../models/User');
 const router = express.Router();
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     User:
+ *       type: object
+ *       required:
+ *         - username
+ *         - password
+ *       properties:
+ *         username:
+ *           type: string
+ *           description: The user's username
+ *         password:
+ *           type: string
+ *           description: The user's password
+ *       example:
+ *         username: 'exampleUser'
+ *         password: 'examplePassword'
+ */
+
+/**
+ * @swagger
+ * /api/register:
+ *   post:
+ *     summary: Register a new user
+ *     tags: [User]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/User'
+ *     responses:
+ *       201:
+ *         description: User registered successfully
+ *       400:
+ *         description: User registration failed
+ */
+
 router.post('/register', async (req, res) => {
   const { username, password } = req.body;
 
@@ -22,6 +62,33 @@ router.post('/register', async (req, res) => {
     res.status(400).json({ error: 'User registration failed' });
   }
 });
+
+/**
+ * @swagger
+ * /api/login:
+ *   post:
+ *     summary: Login a user
+ *     tags: [User]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/User'
+ *     responses:
+ *       200:
+ *         description: User logged in successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 token:
+ *                   type: string
+ *                   description: JWT token for authentication
+ *       401:
+ *         description: Invalid credentials
+ */
 
 // Login endpoint
 router.post('/login', async (req, res) => {

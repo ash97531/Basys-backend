@@ -4,11 +4,38 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const authRoutes = require('./routes/auth');
+const swaggerJsDoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+
+// Swagger configuration
+const swaggerOptions = {
+  swaggerDefinition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'Authentication API',
+      version: '1.0.0',
+      description:
+        'API for user registration and login with JWT authentication',
+      contact: {
+        name: 'Ashwani',
+      },
+      servers: [
+        {
+          url: 'http://localhost:5000',
+        },
+      ],
+    },
+  },
+  apis: ['./routes/*.js'], // Path to the API docs
+};
+
+const swaggerDocs = swaggerJsDoc(swaggerOptions);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 // Middleware
 app.use(cors());
